@@ -254,17 +254,78 @@ function hideAddEmailInput(btn) {
   manager.querySelector(".email-add-input").value = "";
 }
 
+function getEmailOwner(email, currentAgencyId) {
+  const managers = document.querySelectorAll(".email-manager");
+
+  for (let m of managers) {
+    if (m.dataset.agencyId === currentAgencyId) continue;
+
+    const emails = JSON.parse(decodeURIComponent(m.dataset.emails));
+    if (emails.includes(email)) {
+      return m.dataset.agencyName;
+    }
+  }
+  return null;
+}
+function isEmailUsedGlobally(email, currentAgencyId) {
+  const managers = document.querySelectorAll(".email-manager");
+
+  for (let m of managers) {
+    if (m.dataset.agencyId === currentAgencyId) continue;
+
+    const emails = JSON.parse(decodeURIComponent(m.dataset.emails));
+    if (emails.includes(email)) return true;
+  }
+  return false;
+}
 function confirmEmailChange(btn, action, email) {
   const manager = getEmailManager(btn);
   const agencyId   = manager.dataset.agencyId;
   const agencyName = manager.dataset.agencyName;
 
   let targetEmail = email;
+  // if (action === "add") {
+  //   targetEmail = manager.querySelector(".email-add-input").value.trim();
+  //   if (!targetEmail) { alert("Please enter a valid email."); return; }
+  // }
+
   if (action === "add") {
-    targetEmail = manager.querySelector(".email-add-input").value.trim();
-    if (!targetEmail) { alert("Please enter a valid email."); return; }
+  targetEmail = manager.querySelector(".email-add-input").value.trim();
+  if (!targetEmail) {
+    alert("Please enter a valid email.");
+    return;
   }
 
+  const emails = JSON.parse(decodeURIComponent(manager.dataset.emails));
+
+  // Already exists in same agency
+  if (emails.includes(targetEmail)) {
+    alert("This email already exists in this agency.");
+    return;
+  }
+
+  // // 🔥 GLOBAL CHECK
+  // if (isEmailUsedGlobally(targetEmail, agencyId)) {
+  //   document.getElementById("emailConfirmTitle").textContent = "Email Already Used";
+  //   document.getElementById("emailConfirmMsg").innerHTML =
+  //     `<strong>${targetEmail}</strong> is already assigned to another agency.`;
+
+  //   document.getElementById("emailConfirmYes").style.display = "none";
+  //   document.getElementById("emailConfirmModal").style.display = "flex";
+  //   return;
+  // }
+    const owner = getEmailOwner(targetEmail, agencyId);
+
+    if (owner) {
+      document.getElementById("emailConfirmTitle").textContent = "Email Already Used";
+      document.getElementById("emailConfirmMsg").innerHTML =
+        `<strong>${targetEmail}</strong> is already assigned to <strong>${owner}</strong>.`;
+
+      document.getElementById("emailConfirmYes").style.display = "none";
+      document.getElementById("emailConfirmModal").style.display = "flex";
+      return;
+    }
+}
   const emails = JSON.parse(decodeURIComponent(manager.dataset.emails));
 
   let newEmails;
@@ -306,9 +367,24 @@ async function doUpdateEmails() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ agencyId, emails: newEmails })
     });
-    if (!res.ok) throw new Error(await res.text());
+    // if (!res.ok) throw new Error(await res.text());
 
-    // Update UI without reload
+        if (!res.ok) {
+      let data = {};
+      try { data = await res.json(); } catch {}
+
+      if (data.error === "EMAIL_EXISTS") {
+        document.getElementById("emailConfirmTitle").textContent = "Email Already Used";
+        document.getElementById("emailConfirmMsg").innerHTML =
+        `<strong>${data.email}</strong> is already assigned to <strong>${data.agencyName}</strong>.`
+        document.getElementById("emailConfirmYes").style.display = "none";
+        document.getElementById("emailConfirmModal").style.display = "flex";
+        return;
+      }
+
+      throw new Error("Failed");
+    }
+        // Update UI without reload
     manager.dataset.emails = encodeURIComponent(JSON.stringify(newEmails));
 
     if (action === "remove") {

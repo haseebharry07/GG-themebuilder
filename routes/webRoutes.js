@@ -31,25 +31,77 @@ router.patch("/dashboard/toggle-status", async (req, res) => {
     return res.status(500).json({ error: "Server error" });
   }
 });
-router.patch("/dashboard/update-emails", async (req, res) => {
+// router.patch("/dashboard/update-emails", async (req, res) => {
+//   try {
+//     const { agencyId, emails } = req.body;
+//     if (!agencyId) return res.status(400).json({ error: "agencyId required" });
+
+//     const db = await mongoose.connection.asPromise().then(c => c.db);
+//     const result = await db.collection("userThemes").updateOne(
+//       { agencyId: String(agencyId).trim() },
+//       { $set: { email: emails } }
+//     );
+
+//     if (result.matchedCount === 0) {
+//       return res.status(404).json({ error: "Agency not found" });
+//     }
+
+//     return res.json({ success: true });
+//   } catch (err) {
+//     console.error("UPDATE EMAILS ERROR:", err);
+//     return res.status(500).json({ error: "Server error" });
+//   }
+// });
+
+exports.updateEmails = async (req, res) => {
   try {
     const { agencyId, emails } = req.body;
-    if (!agencyId) return res.status(400).json({ error: "agencyId required" });
 
     const db = await mongoose.connection.asPromise().then(c => c.db);
-    const result = await db.collection("userThemes").updateOne(
-      { agencyId: String(agencyId).trim() },
+
+    // 👉 Find newly added email (compared to existing)
+    const current = await db.collection("userThemes").findOne({ agencyId });
+    const currentEmails = current?.email || [];
+
+    const newEmail = emails.find(e => !currentEmails.includes(e));
+
+    // 👉 Check if that email exists in another agency
+    // if (newEmail) {
+    //   const existing = await db.collection("userThemes").findOne({
+    //     agencyId: { $ne: agencyId },
+    //     email: newEmail
+    //   });
+    
+
+     const existing = await db.collection("userThemes").findOne({
+        agencyId: { $ne: agencyId },
+        email: newEmail
+      });
+
+      if (existing) {
+        // Get agency name from AgencyInfo collection
+        const agencyInfo = await db.collection("agencyinfos").findOne({
+          agencyId: existing.agencyId
+        });
+
+        return res.status(400).json({
+          error: "EMAIL_EXISTS",
+          email: newEmail,
+          agencyName: agencyInfo?.agency_name || "Another Agency"
+        });
+      }
+
+    // 👉 Update emails
+    await db.collection("userThemes").updateOne(
+      { agencyId },
       { $set: { email: emails } }
     );
 
-    if (result.matchedCount === 0) {
-      return res.status(404).json({ error: "Agency not found" });
-    }
+    res.json({ success: true });
 
-    return res.json({ success: true });
   } catch (err) {
-    console.error("UPDATE EMAILS ERROR:", err);
-    return res.status(500).json({ error: "Server error" });
+    console.error("Update Emails Error:", err);
+    res.status(500).send("Server error");
   }
-});
+};
 module.exports = router;
