@@ -786,7 +786,7 @@ router.get("/Get-loader-css", async (req, res) => {
     const settings = await AgencySettings.findOne({
       agencyId: userTheme.agencyId
     }).lean();
-    console.log(settings,'here are loaders');
+    // console.log(settings,'here are loaders');
     res.json({
       success: true,
       loaders,
