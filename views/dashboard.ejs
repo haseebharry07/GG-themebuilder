@@ -341,6 +341,7 @@ function confirmEmailChange(btn, action, email) {
     document.getElementById("emailConfirmTitle").textContent = "Add Email?";
   }
 
+  document.getElementById("emailConfirmYes").style.display = "";  // ← add this line
   document.getElementById("emailConfirmMsg").innerHTML = confirmMsg;
   document.getElementById("emailConfirmModal").style.display = "flex";
 
@@ -412,6 +413,7 @@ async function doUpdateEmails() {
     }
 
   } catch (err) {
+    console.log("Email update failed:", err); 
     console.error("Email update failed:", err);
     alert("Failed to update emails. Please try again.");
   }
