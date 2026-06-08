@@ -14,6 +14,8 @@ const UserScript = require("../models/userScript");
 const AgencySettings = require("../models/AgencySettings");
 const AgencyInfo = require("../models/AgencyInfo");
 const connectDB = require("../lib/mongo"); // ← add this line
+const withRetry = require("../utils/withRetry");
+
 // ─── Server-side caches (persist across warm requests) ───────────────────────
 const _fileCache = new Map();        // static CSS files: path → content
 const _resultCache = new Map();      // final CSS: agencyId → { css, etag, builtAt }
@@ -598,38 +600,65 @@ router.get("/file", async (req, res) => {
     res.status(500).json({ message: "Error loading CSS" });
   }
 });
+// router.post("/check-theme", async (req, res) => {
+//   await connectDB();
+//     try {
+//         const { email, agencyId } = req.body;
+
+//         // ✅ Validation
+//         if (!email || !agencyId) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Email and agencyId are required"
+//             });
+//         }
+
+//         // ✅ Query with email + agencyId + isActive
+//         const theme = await Theme.findOne({
+//             email: email,
+//             agencyId: agencyId,
+//             isActive: true
+//         });
+
+//         if (!theme) {
+//             return res.json({ success: false }); // ❌ Not found
+//         }
+
+//         return res.json({ success: true }); // ✅ Found
+//     } catch (err) {
+//         console.error("❌ API Error:", err.message);
+//         res.status(500).json({
+//             success: false,
+//             message: "Server error"
+//         });
+//     }
+// });
 router.post("/check-theme", async (req, res) => {
-  await connectDB();
-    try {
-        const { email, agencyId } = req.body;
+  try {
+    const { email, agencyId } = req.body;
 
-        // ✅ Validation
-        if (!email || !agencyId) {
-            return res.status(400).json({
-                success: false,
-                message: "Email and agencyId are required"
-            });
-        }
-
-        // ✅ Query with email + agencyId + isActive
-        const theme = await Theme.findOne({
-            email: email,
-            agencyId: agencyId,
-            isActive: true
-        });
-
-        if (!theme) {
-            return res.json({ success: false }); // ❌ Not found
-        }
-
-        return res.json({ success: true }); // ✅ Found
-    } catch (err) {
-        console.error("❌ API Error:", err.message);
-        res.status(500).json({
-            success: false,
-            message: "Server error"
-        });
+    if (!email || !agencyId) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and agencyId are required",
+      });
     }
+
+    // Retry connectDB + query together
+    const theme = await withRetry(async () => {
+      await connectDB();
+      return Theme.findOne({ email, agencyId, isActive: true });
+    });
+
+    return res.json({ success: !!theme });
+
+  } catch (err) {
+    console.error("❌ API Error:", err.message);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
 });
 router.get("/merged-css", async (req, res) => {
   await connectDB();
