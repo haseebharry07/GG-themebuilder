@@ -78,7 +78,7 @@ html body::after {
  --header-icon-bg: #212121;
  --header-icon-hover-bg: #100939ff;
  --header-icon-font-size: 20px;
- --sidebar-menu-text-hover-color:#ffffff;
+ --topnav-menu-text-hover-color:#ffffff;
  /* --funnel-website-text-color:247 247 247;
   --funnel-website-secondary-text-color:159 181 211; */
  --header-icon-bg-gradient:  linear-gradient(250deg, #00000000 88%, #00000000 100%);
@@ -3667,7 +3667,7 @@ div.topmenu-navtitle {
 }
 
 .topmenu-nav a:hover {
-  color: var(--sidebar-menu-text-hover-color) !important;
+  color: var(--topnav-menu-text-hover-color) !important;
   background-color: var(--sidebar-menu-hover-bg) !important;
   border-width: var(--top-nav-border-hover-width, 0) !important;
   border-radius: var(--top-nav-border-hover-radius) !important;
@@ -3675,7 +3675,7 @@ div.topmenu-navtitle {
   border-color: var(--top-nav-border-hover-color) !important;
 }
 .topmenu-nav a.active {
-  color: var(--sidebar-menu-text-active-color) !important;
+  color: var(--topnav-menu-text-active-color) !important;
   background-color: var(--sidebar-menu-active-bg) !important;
   border-width: var(--top-nav-border-active-width, 0) !important;
   border-radius: var(--top-nav-border-active-radius) !important;
