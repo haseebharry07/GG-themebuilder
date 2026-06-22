@@ -78,6 +78,8 @@ html body::after {
  --header-icon-bg: #212121;
  --header-icon-hover-bg: #100939ff;
  --header-icon-font-size: 20px;
+ --funel-webite-text-color:247 247 247;
+  --funel-webite-secondary-text-color:159 181 211;
  --header-icon-bg-gradient:  linear-gradient(250deg, #00000000 88%, #00000000 100%);
  --header-bg-color: #F2F7FA;
  --header-main-bg-gradient:  linear-gradient(250deg, #00000000 88%, #00000000 100%);
@@ -1880,8 +1882,14 @@ nav a#sb_location-mobile-app,
 #canny_logs-toggle:active::before {
   background-color: var(--header-icon-color); /* default icon color */
 }
-
-
+.funnel-website .text-gray-900 {
+    --tw-text-opacity: 1;
+    color: rgb(var(--funnel-website-text-color) / var(--tw-text-opacity)) !important;
+}
+.funnel-website .text-gray-600 {
+    --tw-text-opacity: 1;
+    color: rgb(var(--funnel-website-secondary-text-color) / var(--tw-text-opacity)) !important;
+}
 /* header icons end */
 
 .location-dashboard-popover-date-property {
