@@ -1882,14 +1882,14 @@ nav a#sb_location-mobile-app,
 #canny_logs-toggle:active::before {
   background-color: var(--header-icon-color); /* default icon color */
 }
-.funnel-website .text-gray-900 {
+/* .funnel-website .text-gray-900 {
     --tw-text-opacity: 1;
     color: rgb(var(--funnel-website-text-color) / var(--tw-text-opacity)) !important;
 }
 .funnel-website .text-gray-600 {
     --tw-text-opacity: 1;
     color: rgb(var(--funnel-website-secondary-text-color) / var(--tw-text-opacity)) !important;
-}
+} */
 /* header icons end */
 
 .location-dashboard-popover-date-property {
@@ -3655,7 +3655,7 @@ div.topmenu-navtitle {
   font-size: var(--top-nav-menu-font-size) !important;
 }
 .shadow-lg{
-      background-color: #2d2c2c !important;
+      background-color: #ffffff !important;
 }
 .topmenu-nav > a {
   border-width: var(--top-nav-border-width, 0) !important;
