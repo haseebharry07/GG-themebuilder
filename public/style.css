@@ -78,8 +78,8 @@ html body::after {
  --header-icon-bg: #212121;
  --header-icon-hover-bg: #100939ff;
  --header-icon-font-size: 20px;
- --funel-webite-text-color:247 247 247;
-  --funel-webite-secondary-text-color:159 181 211;
+ --funnel-website-text-color:247 247 247;
+  --funnel-website-secondary-text-color:159 181 211;
  --header-icon-bg-gradient:  linear-gradient(250deg, #00000000 88%, #00000000 100%);
  --header-bg-color: #F2F7FA;
  --header-main-bg-gradient:  linear-gradient(250deg, #00000000 88%, #00000000 100%);
