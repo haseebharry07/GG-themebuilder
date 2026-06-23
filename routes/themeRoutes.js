@@ -501,19 +501,19 @@ router.post("/", async (req, res) => {
 
     // Default menu customization data
     const defaultMenuCustomizations = {
-      sb_dashboard: { title: "Dashboard", icon: "f853" },
-      sb_conversations: { title: "Conversations", icon: "f27a" },
-      sb_calendars: { title: "Calendars", icon: "f133" },
-      sb_launchpad: { title: "Launchpad", icon: "f06a" },
-      sb_opportunities: { title: "Opportunities", icon: "f83e" },
-      sb_contacts: { title: "Contacts", icon: "f2c2" },
-      sb_payments: { title: "Payments", icon: "f81d" },
-      sb_reporting: { title: "Reporting", icon: "f24d" },
+      sb_dashboard: { title: "Dashboard", icon: "f200" },
+      sb_conversations: { title: "Conversations", icon: "f4ad" },
+      sb_calendars: { title: "Calendars", icon: "f073" },
+      sb_launchpad: { title: "Launchpad", icon: "f135" },
+      sb_opportunities: { title: "Opportunities", icon: "f550" },
+      sb_contacts: { title: "Contacts", icon: "f2b9" },
+      sb_payments: { title: "Payments", icon: "f155" },
+      sb_reporting: { title: "Reporting", icon: "f2a2" },
       sb_email_marketing: { title: "Email Marketing", icon: "f07a" },
-      sb_automation: { title: "Automation", icon: "f544" },
+      sb_automation: { title: "Automation", icon: "f085" },
       sb_sites: { title: "Sites", icon: "f0ac" },
-      sb_app_media: { title: "App Media", icon: "f478" },
-      sb_memberships: { title: "Memberships", icon: "f390" },
+      sb_app_media: { title: "App Media", icon: "f187" },
+      sb_memberships: { title: "Memberships", icon: "f0c0" },
       sb_reputation: { title: "Reputation", icon: "f005" }
     };
 
