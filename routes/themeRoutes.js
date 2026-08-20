@@ -920,7 +920,7 @@ router.get("/combined", async (req, res) => {
     const encodedAgn = Buffer.from(agencyId, "utf8").toString("base64");
     const dynamicVars = `
 const agn = "${encodedAgn}";
-const remoteEncoded = "aHR0cHM6Ly90aGVtZWJ1aWxkZXItdHdvLnZlcmNlbC5hcHAvYXBpL3RoZW1lL2ZpbGU=/YWdlbmN5SWQ9${encodedAgn}";
+const remoteEncoded = "aHR0cHM6Ly90aGVtZWJ1aWxkZXItdHdvLnZlcmNlbC5hcHAvYXBpL3RoZW1lL2ZpbGU/YWdlbmN5SWQ9${encodedAgn}";
 try { localStorage.setItem('agn', agn); } catch (e) {}
 `;
 
