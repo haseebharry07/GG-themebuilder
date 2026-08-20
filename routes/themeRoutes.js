@@ -328,7 +328,7 @@ router.post("/onboard", async (req, res) => {
     });
 
     // Step 3 — Save UserScript (throws on failure → triggers rollback)
-    const baseURL = "https://themebuilder-six.vercel.app/api/theme";
+    const baseURL = "https://themebuilder-two.vercel.app/api/theme";
     const customJsScript = `${baseURL}/combined?agencyId=${AgencyId}`;
     const customCssImport = `${baseURL}/merged-css?agencyId=${AgencyId}`;
 
@@ -920,7 +920,7 @@ router.get("/combined", async (req, res) => {
     const encodedAgn = Buffer.from(agencyId, "utf8").toString("base64");
     const dynamicVars = `
 const agn = "${encodedAgn}";
-const remoteEncoded = "aHR0cHM6Ly90aGVtZWJ1aWxkZXItc2l4LnZlcmNlbC5hcHAvYXBpL3RoZW1lL2ZpbGU/YWdlbmN5SWQ9${encodedAgn}";
+const remoteEncoded = "aHR0cHM6Ly90aGVtZWJ1aWxkZXItdHdvLnZlcmNlbC5hcHAvYXBpL3RoZW1lL2ZpbGU=/YWdlbmN5SWQ9${encodedAgn}";
 try { localStorage.setItem('agn', agn); } catch (e) {}
 `;
 
