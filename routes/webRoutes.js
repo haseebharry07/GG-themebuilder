@@ -5,6 +5,22 @@ const mongoose = require("mongoose");
 const { isAuthenticated } = require("../middleware/authMiddleware");
 const dashboardController = require("../controllers/dashboardController");
 
+router.get("/", (req, res) => {
+  res.render("support-home");
+});
+
+router.get("/documentation", (req, res) => {
+  res.render("documentation");
+});
+
+router.get("/terms", (req, res) => {
+  res.render("terms");
+});
+
+router.get("/privacy", (req, res) => {
+  res.render("privacy");
+});
+
 // Protected route
 router.get("/dashboard", isAuthenticated, dashboardController.getDashboard);
 
