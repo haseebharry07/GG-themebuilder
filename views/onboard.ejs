@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Onboard user | Theme Builder</title>
+  <link rel="icon" type="image/x-icon" href="https://themebuilder-two.vercel.app/images/brand-logo.png">
+  <link rel="stylesheet" href="/css/onboard.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="/dashboard" aria-label="Theme Builder dashboard">
+        <span class="brand-mark">G</span>
+        <span><strong>Theme Builder</strong><small>ADMIN CONSOLE</small></span>
+      </a>
+      <div class="nav-label">WORKSPACE</div>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="/dashboard">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          Agencies
+        </a>
+        <a class="active" href="/onboard" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M3 21v-2a6 6 0 0 1 6-6h1M19 8v8m-4-4h8"/></svg>
+          Onboard user
+        </a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-note"><span class="online-dot"></span><span>All systems operational</span></div>
+        <a class="logout-link" href="/logout">Sign out <span aria-hidden="true">↗</span></a>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="breadcrumb">Workspace <span>/</span> Onboard user</div>
+        <div class="admin-pill" data-email="<%= admin.email %>"><span class="admin-avatar"><%= (admin.email || "A").charAt(0).toUpperCase() %></span><span><%= admin.email %></span></div>
+      </header>
+
+      <section class="page-intro">
+        <div class="eyebrow"><span></span> A NEW BEGINNING</div>
+        <h1>Bring a new agency<br><em>on board.</em></h1>
+        <p>Create their workspace in a few quick steps. We’ll generate the install scripts as soon as their account is ready.</p>
+      </section>
+
+      <div class="content-grid">
+        <section class="form-card" aria-labelledby="form-title">
+          <div class="card-heading">
+            <div>
+              <div class="step-kicker"><span>01</span> AGENCY PROFILE</div>
+              <h2 id="form-title">Tell us about them</h2>
+              <p>Share the details we need to set up their theme workspace.</p>
+            </div>
+            <div class="heading-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3.5 14.2 9l5.8 2-5.8 2L12 18.5 9.8 13 4 11l5.8-2L12 3.5Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></svg>
+            </div>
+          </div>
+
+          <form id="onboardForm" novalidate>
+            <div class="field-grid">
+              <div class="field">
+                <label for="fullName">Full name <span class="required">*</span></label>
+                <input id="fullName" name="full_name" autocomplete="name" placeholder="e.g. Jordan Lee" required>
+              </div>
+              <div class="field">
+                <label for="agencyName">Agency name <span class="required">*</span></label>
+                <input id="agencyName" name="Agency_Name" placeholder="e.g. Northstar Digital" required>
+              </div>
+              <div class="field">
+                <label for="relationshipNo">Relationship number <span class="optional">OPTIONAL</span></label>
+                <input id="relationshipNo" name="Relationship_No" placeholder="e.g. RL-10482">
+              </div>
+              <div class="field">
+                <label for="fullAddress">Business address <span class="optional">OPTIONAL</span></label>
+                <input id="fullAddress" name="fullAddress" autocomplete="street-address" placeholder="Street, city, country">
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="field email-field">
+              <label for="emailInput">Email addresses <span class="required">*</span></label>
+              <p class="field-help">Add one or more emails. Each address can be used to identify this agency.</p>
+              <div class="email-entry" id="emailEntry">
+                <span class="email-entry-icon" aria-hidden="true">@</span>
+                <input id="emailInput" type="email" autocomplete="email" placeholder="name@company.com">
+                <button id="addEmailButton" class="add-email-button" type="button">Add email <span>+</span></button>
+              </div>
+              <div id="emailList" class="email-list" aria-live="polite"></div>
+              <div id="emailHint" class="email-hint">At least one email address is required.</div>
+            </div>
+
+            <div id="formMessage" class="form-message" role="alert" hidden></div>
+            <button id="submitButton" class="submit-button" type="submit">
+              <span class="button-label">Create agency workspace</span>
+              <span class="button-arrow" aria-hidden="true">↗</span>
+            </button>
+            <div class="secure-note"><span aria-hidden="true">✳</span> Your details are securely saved to the agency workspace.</div>
+          </form>
+        </section>
+
+        <aside class="side-column">
+          <section class="side-card process-card">
+            <div class="side-card-label">WHAT HAPPENS NEXT</div>
+            <h3>Ready to get started?</h3>
+            <div class="process-step">
+              <span class="process-number">1</span>
+              <div><strong>Create the workspace</strong><p>We’ll prepare a fresh theme workspace for the agency.</p></div>
+            </div>
+            <div class="process-step">
+              <span class="process-number">2</span>
+              <div><strong>Get their install scripts</strong><p>Copy the generated snippets into their site to go live.</p></div>
+            </div>
+            <div class="process-step">
+              <span class="process-number">3</span>
+              <div><strong>Customize anytime</strong><p>Manage themes and agency details from your dashboard.</p></div>
+            </div>
+          </section>
+          <section class="side-card tip-card">
+            <span class="tip-icon" aria-hidden="true">✦</span>
+            <div><strong>A little tip</strong><p>Include every team email that should be able to access this agency’s theme setup.</p></div>
+          </section>
+        </aside>
+      </div>
+
+      <section id="successCard" class="success-card" aria-live="polite" hidden>
+        <div class="success-header">
+          <div class="success-check" aria-hidden="true">✓</div>
+          <div><div class="step-kicker success-kicker">WORKSPACE CREATED</div><h2>You’re all set.</h2><p id="successSummary"></p></div>
+          <button type="button" class="dismiss-success" id="dismissSuccess" aria-label="Dismiss success message">×</button>
+        </div>
+        <div class="success-meta"><span>AGENCY ID</span><code id="agencyId"></code><button type="button" class="copy-button" data-copy="agencyId">Copy ID</button></div>
+        <div class="script-grid">
+          <div class="script-item">
+            <div class="script-label"><span class="script-dot js-dot"></span> JAVASCRIPT INSTALL</div>
+            <div class="script-box"><code id="customJs"></code><button type="button" class="copy-button" data-copy="customJs">Copy script</button></div>
+          </div>
+          <div class="script-item">
+            <div class="script-label"><span class="script-dot css-dot"></span> CSS INSTALL</div>
+            <div class="script-box"><code id="customCss"></code><button type="button" class="copy-button" data-copy="customCss">Copy script</button></div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="page-footer"><span>Theme Builder</span><span>Thoughtful tools for better experiences.</span></footer>
+    </main>
+  </div>
+
+  <script>
+    const form = document.getElementById("onboardForm");
+    const emailInput = document.getElementById("emailInput");
+    const emailList = document.getElementById("emailList");
+    const emailHint = document.getElementById("emailHint");
+    const formMessage = document.getElementById("formMessage");
+    const submitButton = document.getElementById("submitButton");
+    const emails = [];
+
+    function renderEmails() {
+      emailList.replaceChildren();
+      emails.forEach((email, index) => {
+        const chip = document.createElement("span");
+        chip.className = "email-chip";
+        const address = document.createElement("span");
+        address.textContent = email;
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "remove-email";
+        remove.setAttribute("aria-label", `Remove ${email}`);
+        remove.textContent = "×";
+        remove.addEventListener("click", () => {
+          emails.splice(index, 1);
+          renderEmails();
+        });
+        chip.append(address, remove);
+        emailList.append(chip);
+      });
+      emailHint.textContent = emails.length ? `${emails.length} email${emails.length === 1 ? "" : "s"} added` : "At least one email address is required.";
+      emailHint.classList.toggle("has-emails", emails.length > 0);
+    }
+
+    function addEmails() {
+      const entries = emailInput.value.split(",").map(value => value.trim().toLowerCase()).filter(Boolean);
+      if (!entries.length) {
+        emailInput.focus();
+        return;
+      }
+      for (const email of entries) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          emailInput.setCustomValidity("Enter a valid email address.");
+          emailInput.reportValidity();
+          emailInput.setCustomValidity("");
+          return;
+        }
+      }
+      entries.forEach(email => {
+        if (!emails.includes(email)) emails.push(email);
+      });
+      emailInput.value = "";
+      renderEmails();
+      emailInput.focus();
+    }
+
+    document.getElementById("addEmailButton").addEventListener("click", addEmails);
+    emailInput.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === ",") {
+        event.preventDefault();
+        addEmails();
+      }
+    });
+    emailInput.addEventListener("input", () => emailInput.setCustomValidity(""));
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+      formMessage.hidden = true;
+      formMessage.textContent = "";
+      if (emailInput.value.trim()) addEmails();
+      if (!form.reportValidity()) return;
+      if (!emails.length) {
+        emailInput.focus();
+        emailHint.classList.add("needs-email");
+        return;
+      }
+
+      const formData = new FormData(form);
+      const payload = {
+        full_name: formData.get("full_name").trim(),
+        Agency_Name: formData.get("Agency_Name").trim(),
+        Relationship_No: formData.get("Relationship_No").trim(),
+        fullAddress: formData.get("fullAddress").trim(),
+        email: [...emails],
+        createdBy: document.querySelector(".admin-pill").dataset.email
+      };
+
+      submitButton.disabled = true;
+      submitButton.classList.add("is-loading");
+      submitButton.querySelector(".button-label").textContent = "Creating workspace…";
+      try {
+        const response = await fetch("/api/theme/onboard", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || "Unable to create the agency workspace.");
+
+        document.getElementById("successSummary").textContent = `${payload.Agency_Name} is ready. Copy the install scripts below to complete setup.`;
+        document.getElementById("agencyId").textContent = result.agencyId;
+        document.getElementById("customJs").textContent = result.customJs;
+        document.getElementById("customCss").textContent = result.customCss;
+        document.getElementById("successCard").hidden = false;
+        document.getElementById("successCard").scrollIntoView({ behavior: "smooth", block: "center" });
+        form.reset();
+        emails.splice(0, emails.length);
+        renderEmails();
+      } catch (error) {
+        formMessage.textContent = error.message || "Something went wrong. Please try again.";
+        formMessage.hidden = false;
+      } finally {
+        submitButton.disabled = false;
+        submitButton.classList.remove("is-loading");
+        submitButton.querySelector(".button-label").textContent = "Create agency workspace";
+      }
+    });
+
+    async function copyValue(id, button) {
+      const text = document.getElementById(id).textContent;
+      try {
+        await navigator.clipboard.writeText(text);
+        const original = button.textContent;
+        button.textContent = "Copied ✓";
+        window.setTimeout(() => { button.textContent = original; }, 1600);
+      } catch (error) {
+        const range = document.createRange();
+        range.selectNodeContents(document.getElementById(id));
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        formMessage.textContent = "Clipboard access is unavailable. Select and copy the highlighted text.";
+        formMessage.hidden = false;
+      }
+    }
+
+    document.querySelectorAll("[data-copy]").forEach(button => {
+      button.addEventListener("click", () => copyValue(button.dataset.copy, button));
+    });
+    document.getElementById("dismissSuccess").addEventListener("click", () => {
+      document.getElementById("successCard").hidden = true;
+    });
+  </script>
+</body>
+</html>

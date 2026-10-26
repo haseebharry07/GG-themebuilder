@@ -42,7 +42,7 @@ router.get("/oauth/callback", async (req, res) => {
 });
 router.get("/oauth/callbackv2", async (req, res) => {
   const code = req.query.code;
-
+  console.log("OAuth Callback v2 code:", code);
   if (!code) return res.status(400).send("Missing OAuth code");
 
   try {

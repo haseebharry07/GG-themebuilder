@@ -24,6 +24,10 @@ router.get("/privacy", (req, res) => {
 // Protected route
 router.get("/dashboard", isAuthenticated, dashboardController.getDashboard);
 
+router.get("/onboard", isAuthenticated, (req, res) => {
+  res.render("onboard", { admin: req.session.admin });
+});
+
 // PATCH /dashboard/toggle-status
 router.patch("/dashboard/toggle-status", async (req, res) => {
   try {
