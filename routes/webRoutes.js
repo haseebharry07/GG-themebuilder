@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 
 const { isAuthenticated } = require("../middleware/authMiddleware");
 const dashboardController = require("../controllers/dashboardController");
+const MarketplaceInstallation = require("../models/MarketplaceInstallation");
+const UserScript = require("../models/userScript");
 
 router.get("/", (req, res) => {
   res.render("support-home");
@@ -19,6 +21,59 @@ router.get("/terms", (req, res) => {
 
 router.get("/privacy", (req, res) => {
   res.render("privacy");
+});
+
+// Marketplace sidebar destination. Tenant identity comes from the OAuth callback
+// session and is rechecked against the installation record before reading scripts.
+router.get("/marketplace/app", async (req, res) => {
+  res.set("Cache-Control", "no-store");
+  const tenant = req.session?.marketplace;
+  if (!tenant?.companyId || !tenant?.builderAgencyId) {
+    return res.status(401).render("marketplace-app", {
+      needsInstall: true,
+      error: "Open Theme Builder from the GHL Marketplace installation flow so we can securely connect your account."
+    });
+  }
+
+  try {
+    const installation = await MarketplaceInstallation.findOne({
+      companyId: tenant.companyId,
+      builderAgencyId: tenant.builderAgencyId
+    }).lean();
+    if (!installation) {
+      req.session.marketplace = null;
+      return res.status(401).render("marketplace-app", {
+        needsInstall: true,
+        error: "Your GHL installation was not found. Please reinstall Theme Builder from the Marketplace."
+      });
+    }
+
+    const script = await UserScript.findOne({ agencyId: installation.builderAgencyId })
+      .select("customJs customCss updatedAt")
+      .lean();
+    const appBaseUrl = (process.env.APP_BASE_URL || `${req.protocol}://${req.get("host")}`).replace(/\/$/, "");
+    const themeApi = `${appBaseUrl}/api/theme`;
+    const customJs = script?.customJs || `<script src="${themeApi}/combined?agencyId=${encodeURIComponent(installation.builderAgencyId)}"></script>`;
+    const customCss = script?.customCss || `@import url("${themeApi}/merged-css?agencyId=${encodeURIComponent(installation.builderAgencyId)}");`;
+    res.render("marketplace-app", {
+      needsInstall: false,
+      error: null,
+      companyName: installation.companyName || "Your GHL account",
+      customJs,
+      customCss,
+      appBaseUrl
+    });
+  } catch (error) {
+    console.error("Marketplace app page failed:", error.message);
+    res.status(500).render("marketplace-app", {
+      needsInstall: false,
+      error: "We could not load your Theme Builder scripts. Please refresh the page.",
+      companyName: "",
+      customJs: "",
+      customCss: "",
+      appBaseUrl: ""
+    });
+  }
 });
 
 // Protected route

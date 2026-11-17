@@ -7,6 +7,7 @@ const routeauth = require("./routes/routeauth");
 const adminRoutes = require("./routes/adminRoutes");
 const connectDB = require("./lib/mongo");
 const session = require("express-session");
+const MongoSessionStore = require("./lib/mongoSessionStore");
 const webRoutes = require("./routes/webRoutes");
 const authRoutes = require("./routes/authRoutes");
 
@@ -32,10 +33,23 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // for form data
 
+if (process.env.NODE_ENV === "production") app.set("trust proxy", 1);
+const sessionSecret = process.env.SESSION_SECRET || process.env.JWT_SECRET;
+if (process.env.NODE_ENV === "production" && !sessionSecret) {
+  throw new Error("Set SESSION_SECRET (or JWT_SECRET) before starting in production.");
+}
 app.use(session({
-  secret: "mysecretkey",
+  name: "themebuilder.sid",
+  secret: sessionSecret || "development-only-change-this-secret",
   resave: false,
   saveUninitialized: false,
+  store: new MongoSessionStore(),
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  }
 }));
 // ✅ Connect DB
 connectDB();

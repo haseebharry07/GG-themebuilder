@@ -15,6 +15,7 @@ const AgencySettings = require("../models/AgencySettings");
 const AgencyInfo = require("../models/AgencyInfo");
 const connectDB = require("../lib/mongo"); // ← add this line
 const withRetry = require("../utils/withRetry");
+const { isAuthenticated } = require("../middleware/authMiddleware");
 
 // ─── Server-side caches (persist across warm requests) ───────────────────────
 const _fileCache = new Map();        // static CSS files: path → content
@@ -54,7 +55,7 @@ router.get("/_debug-test", (req, res) => {
   console.log("✅ Theme routes active");
   res.json({ ok: true });
 });
-router.get("/agencies", async (req, res) => {
+router.get("/agencies", isAuthenticated, async (req, res) => {
   try {
     // Get all themes (for logo + status)
     const themes = await Theme.find({})
@@ -132,7 +133,7 @@ router.get("/agencies", async (req, res) => {
 });
 // Create Agency Info API
 
-router.post("/agency-info", async (req, res) => {
+router.post("/agency-info", isAuthenticated, async (req, res) => {
   try {
     const {
       full_name,
@@ -181,7 +182,7 @@ router.post("/agency-info", async (req, res) => {
     });
   }
 });
-router.post("/addthemes", async (req, res) => {
+router.post("/addthemes", isAuthenticated, async (req, res) => {
   await connectDB();
   try {
     const { themeName, themeData, createdBy } = req.body;
@@ -256,7 +257,7 @@ router.get("/getallthemes", async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
-router.post("/onboard", async (req, res) => {
+router.post("/onboard", isAuthenticated, async (req, res) => {
   let newTheme = null; // track for rollback
 
   try {
@@ -376,7 +377,7 @@ router.post("/onboard", async (req, res) => {
     });
   }
 });
-router.get("/script/by-email", async (req, res) => {
+router.get("/script/by-email", isAuthenticated, async (req, res) => {
   try {
     let { email } = req.query;
 
@@ -942,7 +943,7 @@ try { localStorage.setItem('agn', agn); } catch (e) {}
   }
 });
 
-router.post("/agencysettings", async (req, res) => {
+router.post("/agencysettings", isAuthenticated, async (req, res) => {
   await connectDB();
 
   try {
