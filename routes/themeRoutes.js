@@ -633,7 +633,7 @@ router.get("/file", async (req, res) => {
 //         });
 //     }
 // });
-router.post("/check-theme", async (req, res) => {
+  router.post("/check-theme", async (req, res) => {
   try {
     const { email, agencyId } = req.body;
 
@@ -910,9 +910,12 @@ router.get("/combined", async (req, res) => {
 
     // ── 4. Fetch all remote + local files in parallel ─────────────────────────
     const [codeJS, remoteSettings, codefile, topnav] = await Promise.all([
-      fetchRemoteCached("https://glitch-gone.vercel.app/code.js"),
-      fetchRemoteCached("https://glitch-gone.vercel.app/settings.js"),
-      fetchRemoteCached("https://glitch-gone.vercel.app/codefile.js"),
+      readFileCached(path.join(__dirname, "../public/js/code.js")),
+      readFileCached(path.join(__dirname, "../public/js/settings.js")),
+      readFileCached(path.join(__dirname, "../public/js/codefile.js")),
+      // fetchRemoteCached("https://glitch-gone.vercel.app/code.js"),
+      // fetchRemoteCached("https://glitch-gone.vercel.app/settings.js"),
+      // fetchRemoteCached("https://glitch-gone.vercel.app/codefile.js"),
       readFileCached(path.join(__dirname, "../public/topnav.js")),
     ]);
 
